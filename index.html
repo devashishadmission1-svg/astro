@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jyotish Pathak & Rupakheti | Immersive Vedic Astrology</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&family=Mukta:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+    <video autoplay muted loop id="bg-video">
+        <source src="https://pixabay.com/videos/download/video-199580_medium.mp4" type="video/mp4">
+    </video>
+    <div id="video-overlay"></div>
+
+    <header>
+        <nav>
+            <div class="logo">🕉️ ज्योतीष</div>
+            <ul>
+                <li><a href="#services" data-i18n="nav_services">सेवाहरू</a></li>
+                <li><a href="#experts" data-i18n="nav_experts">विशेषज्ञहरू</a></li>
+                <li><a href="#booking" data-i18n="nav_booking">परामर्श बुक गर्नुहोस्</a></li>
+                <li><button id="lang-toggle" class="btn-lang">English Translation</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1 data-i18n="hero_title">ब्रह्माण्डको ज्ञान, नयाँ शैलीमा</h1>
+                <p data-i18n="hero_subtitle">पराशरी र जैमिनी ज्योतिषको माध्यमबाट तपाईंको भाग्य बुझ्नुहोस्।</p>
+                <div class="cta-buttons">
+                    <a href="#booking" class="btn btn-primary" data-i18n="btn_book">जन्म कुण्डली विश्लेषण</a>
+                    <a href="#services" class="btn btn-secondary" data-i18n="btn_explore">सेवाहरू हेर्नुहोस्</a>
+                </div>
+            </div>
+            <div id="three-model-hint">Hover to Interact with Bha-Chakra</div>
+        </section>
+
+        <section id="services">
+            <h2 data-i18n="service_title">दिव्य सेवाहरू</h2>
+            <div class="rashi-grid">
+                <div class="rashi-item">
+                    <div class="rashi-icon">♈</div>
+                    <h4 data-i18n="rashi_1_name">मेष</h4>
+                    <p data-i18n="rashi_1_desc">विंशोत्तरी दशा विश्लेषण</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♉</div>
+                    <h4 data-i18n="rashi_2_name">वृष</h4>
+                    <p data-i18n="rashi_2_desc">नवांश (D9) गहन अध्ययन</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 3000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 60m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♊</div>
+                    <h4 data-i18n="rashi_3_name">मिथुन</h4>
+                    <p data-i18n="rashi_3_desc">मुहूर्त चयन</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 1500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 30m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♋</div>
+                    <h4 data-i18n="rashi_4_name">कर्कट</h4>
+                    <p data-i18n="rashi_4_desc">पारिवारिक वंश आशीर्वाद</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♌</div>
+                    <h4 data-i18n="rashi_5_name">सिंह</h4>
+                    <p data-i18n="rashi_5_desc">करियर र शक्ति गतिशीलता</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 3000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 60m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♍</div>
+                    <h4 data-i18n="rashi_6_name">कन्या</h4>
+                    <p data-i18n="rashi_6_desc">स्वास्थ्य र कल्याण वास्तु</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♎</div>
+                    <h4 data-i18n="rashi_7_name">तुला</h4>
+                    <p data-i18n="rashi_7_desc">सम्बन्ध सद्भाव</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♏</div>
+                    <h4 data-i18n="rashi_8_name">वृश्चिक</h4>
+                    <p data-i18n="rashi_8_desc">कार्मिक ऋण विश्लेषण</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 3000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 60m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♐</div>
+                    <h4 data-i18n="rashi_9_name">धनु</h4>
+                    <p data-i18n="rashi_9_desc">उच्च ज्ञान मार्गदर्शन</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♑</div>
+                    <h4 data-i18n="rashi_10_name">मकर</h4>
+                    <p data-i18n="rashi_10_desc">सामाजिक योगदान</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♒</div>
+                    <h4 data-i18n="rashi_11_name">कुम्भ</h4>
+                    <p data-i18n="rashi_11_desc">आध्यात्मिक मुक्ति</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 3000 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 60m
+                    </div>
+                </div>
+                <div class="rashi-item">
+                    <div class="rashi-icon">♓</div>
+                    <h4 data-i18n="rashi_12_name">मीन</h4>
+                    <p data-i18n="rashi_12_desc">विश्वव्यापी मोक्ष मार्ग</p>
+                    <div class="service-meta">
+                        <span data-i18n="service_price_tag">मूल्य:</span> NPR 2500 |
+                        <span data-i18n="service_duration_tag">अवधि:</span> 45m
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label" data-i18n="stats_experience">अनुभव (वर्ष)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label" data-i18n="stats_clients">सन्तुष्ट ग्राहकहरू</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experts">
+            <h2 data-i18n="about_title">हाम्रो बारेमा</h2>
+            <div class="expert-cards">
+                <div class="glass-card" id="dr-pathak">
+                    <div class="expert-img-placeholder">🎓</div>
+                    <div class="badge" data-i18n="expert_pathak_badge">शैक्षिक दक्षता र विद्वत्ता</div>
+                    <h3 id="name-pathak">Dr. Devendra Prasad Pathak</h3>
+                    <p data-i18n="expert_pathak_desc">ज्योतिष शास्त्रमा विद्यावारिधि, ३० वर्षभन्दा बढीको अनुसन्धान
+                        अनुभव।</p>
+                </div>
+                <div class="glass-card" id="mr-rupakheti">
+                    <div class="expert-img-placeholder">📜</div>
+                    <div class="badge" data-i18n="expert_rupakheti_badge">परम्परागत ब्राह्मण वंश</div>
+                    <h3 id="name-rupakheti">Krishnadev Rupakheti</h3>
+                    <p data-i18n="expert_rupakheti_desc">बहु-पुस्ताको परम्परागत पञ्चाङ्ग र मुहूर्त शुद्धता।</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tools">
+            <h2 data-i18n="tools_title">नि: शुल्क उपकरणहरू</h2>
+            <div class="tools-grid">
+                <div class="tool-card glass-card">
+                    <h3 data-i18n="tool_horoscope">दैनिक राशिफल</h3>
+                    <p>Coming Soon</p>
+                </div>
+                <div class="tool-card glass-card">
+                    <h3 data-i18n="tool_rashi">तपाईंको राशि फेला पार्नुहोस्</h3>
+                    <p>Coming Soon</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials">
+            <h2 data-i18n="testimonials_title">ग्राहकका अनुभवहरू</h2>
+            <div class="testimonials-slider">
+                <div class="testimonial-card glass-card">
+                    <p data-i18n="testimonial_1">"उहाँको भविष्यवाणी एकदमै सटीक थियो। मेरो करियरको लागि उहाँको
+                        मार्गदर्शनले ठूलो सहयोग गर्यो।"</p>
+                    <span data-i18n="testimonial_1_author">- राम कुमार, काठमाडौं</span>
+                </div>
+                <div class="testimonial-card glass-card">
+                    <p data-i18n="testimonial_2">"विवाह मिलानमा उहाँको गहिरो विश्लेषणले हामीलाई धेरै स्पष्टता दियो।"</p>
+                    <span data-i18n="testimonial_2_author">- सीता गुरुङ, पोखरा</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq">
+            <h2 data-i18n="faq_title">बारम्बार सोधिने प्रश्नहरू</h2>
+            <div class="faq-accordion">
+                <div class="faq-item glass-card">
+                    <h4 data-i18n="faq_1_q">परामर्शको शुल्क कति छ?</h4>
+                    <p data-i18n="faq_1_a">सेवा अनुसार शुल्क फरक छ।</p>
+                </div>
+                <div class="faq-item glass-card">
+                    <h4 data-i18n="faq_2_q">अनलाइन परामर्श कसरी हुन्छ?</h4>
+                    <p data-i18n="faq_2_a">हामी फोन वा भिडियो कल मार्फत परामर्श दिन्छौं।</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="booking">
+            <div class="booking-portal glass-card">
+                <h2 data-i18n="booking_title">परामर्श बुक गर्नुहोस्</h2>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="name" data-i18n="label_name">नाम</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dob" data-i18n="label_dob">जन्म मिति</label>
+                            <input type="date" id="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tob" data-i18n="label_tob">जन्म समय (सटीक)</label>
+                            <input type="time" id="tob" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="coordinates" data-i18n="label_coords">जन्म स्थान (शहर/समन्वय)</label>
+                        <input type="text" id="coordinates" placeholder="e.g. Kathmandu, 27.7172° N, 85.3240° E"
+                            required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tithi" data-i18n="label_tithi">तिथि (थाहा भएमा)</label>
+                            <input type="text" id="tithi">
+                        </div>
+                        <div class="form-group">
+                            <label for="nakshatra" data-i18n="label_nakshatra">नक्षत्र</label>
+                            <input type="text" id="nakshatra">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mode" data-i18n="booking_mode">परामर्शको माध्यम</label>
+                        <select id="mode">
+                            <option value="phone" data-i18n="mode_phone">फोन</option>
+                            <option value="video" data-i18n="mode_video">भिडियों</option>
+                            <option value="in-person" data-i18n="mode_inpatient">व्यक्तिगत भेट</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-i18n="btn_submit">बुकिङ पुष्टि गर्नुहोस्</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 data-i18n="contact_title">सम्पर्क विवरण</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h4 data-i18n="hours_title">कार्य समय</h4>
+                    <p>10:00 AM - 6:00 PM (Sun - Fri)</p>
+                </div>
+                <div class="contact-item">
+                    <h4 data-i18n="location_title">स्थान</h4>
+                    <p>Kathmandu, Nepal 🇳🇵</p>
+                </div>
+                <div class="contact-item">
+                    <h4>WhatsApp</h4>
+                    <p>+977 98XXXXXXX</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Jyotish Dr. Devendra Prasad Pathak & Mr. Krishnadev Rupakheti. All Rights Reserved.</p>
+        <div class="footer-icons">🐚 🪷 🕉️</div>
+    </footer>
+
+    <script src="languages.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
