@@ -7,6 +7,7 @@
     --text: #F0F0F0;
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'Inter', sans-serif;
+    --font-nepali: 'Mukta', sans-serif;
 }
 
 * {
@@ -19,7 +20,7 @@
 body {
     background-color: var(--navy);
     color: var(--text);
-    font-family: var(--font-sans);
+    font-family: var(--font-nepali);
     overflow-x: hidden;
     line-height: 1.6;
 }
@@ -30,6 +31,19 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: -1;
+    background: #0A0A12;
+    /* Solid minimalistic dark navy */
+}
+
+#canvas-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 18, 0.8) 100%);
     z-index: 1;
     /* Above video, below UI */
     pointer-events: none;
@@ -56,14 +70,10 @@ body {
 }
 
 header {
-    position: fixed;
-    top: 0;
+    padding: 2rem 5%;
+    position: absolute;
     width: 100%;
-    padding: 1.5rem 5%;
-    background: rgba(15, 15, 27, 0.8);
-    backdrop-filter: blur(10px);
     z-index: 100;
-    border-bottom: 1px solid var(--glass-border);
 }
 
 nav {
@@ -73,10 +83,11 @@ nav {
 }
 
 .logo {
+    font-size: 1.8rem;
     font-family: var(--font-serif);
-    font-size: 1.5rem;
     color: var(--gold);
     font-weight: bold;
+    letter-spacing: 2px;
 }
 
 nav ul {
@@ -85,26 +96,23 @@ nav ul {
     gap: 2rem;
 }
 
-nav a {
-    text-decoration: none;
+nav ul a {
     color: var(--text);
+    text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: color 0.3s;
-}
-
-nav a:hover {
-    color: var(--gold);
 }
 
 .btn-lang {
     background: transparent;
-    border: 1px solid var(--gold);
+    border: 1px solid var(--glass-border);
     color: var(--gold);
     padding: 0.5rem 1rem;
+    border-radius: 50px;
     cursor: pointer;
     font-size: 0.8rem;
-    border-radius: 4px;
     transition: all 0.3s;
 }
 
@@ -113,17 +121,13 @@ nav a:hover {
     color: var(--navy);
 }
 
-main {
-    padding-top: 100px;
-}
-
 section {
-    min-height: 80vh;
-    padding: 5rem 10%;
+    min-height: 100vh;
+    padding: 10vh 5%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
@@ -131,69 +135,68 @@ section {
     height: 100vh;
 }
 
-.hero-content h1 {
+h1 {
     font-family: var(--font-serif);
-    font-size: 4rem;
+    font-size: clamp(3rem, 8vw, 5rem);
     color: var(--gold);
     margin-bottom: 1rem;
-    line-height: 1.2;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
 .hero-content p {
     font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
     opacity: 0.8;
-    margin-bottom: 2rem;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
 }
 
 .btn {
-    padding: 1rem 2.5rem;
+    padding: 1rem 2rem;
     border-radius: 4px;
-    font-weight: 600;
     text-decoration: none;
-    transition: all 0.3s;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+    cursor: pointer;
 }
 
 .btn-primary {
     background: var(--gold);
     color: var(--navy);
-}
-
-.btn-secondary {
-    border: 1px solid var(--gold);
-    color: var(--gold);
+    border: none;
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
 }
 
-#three-model-hint {
-    margin-top: 2rem;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    opacity: 0.5;
+.btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    margin-left: 1rem;
+}
+
+.btn-secondary:hover {
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .glass-card {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
     padding: 3rem;
-    border-radius: 12px;
-    width: 100%;
-    transition: transform 0.3s;
+    box-shadow: 0 15px 45px 0 rgba(0, 0, 0, 0.5);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .glass-card:hover {
-    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(212, 175, 55, 0.2);
+    transform: translateY(-5px) scale(1.01);
 }
 
 .rashi-grid {
@@ -208,17 +211,20 @@ section {
     background: var(--glass);
     border: 1px solid var(--glass-border);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 15px;
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .rashi-item:hover {
+    background: rgba(212, 175, 55, 0.1);
     border-color: var(--gold);
     transform: scale(1.05);
 }
 
 .rashi-icon {
     font-size: 2.5rem;
+    color: var(--gold);
     margin-bottom: 1rem;
 }
 
@@ -300,80 +306,6 @@ select {
     font-family: var(--font-sans);
 }
 
-.contact-item h4 {
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-}
-
-
-.expert-cards {
-    display: flex;
-    gap: 2rem;
-    margin-top: 3rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.badge {
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    background: rgba(255, 153, 51, 0.2);
-    color: var(--saffron);
-    border-radius: 50px;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
-}
-
-#booking-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 600px;
-    width: 100%;
-    margin-top: 2rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    gap: 0.5rem;
-}
-
-.form-row {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.form-row .form-group {
-    flex: 1;
-}
-
-input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    padding: 1rem;
-    border-radius: 4px;
-    color: white;
-    font-family: var(--font-sans);
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-input:focus {
-    border-color: var(--gold);
-}
-
-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
 .testimonials-slider {
     display: flex;
     gap: 2rem;
@@ -416,22 +348,85 @@ footer {
 }
 
 
+.expert-cards {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(255, 153, 51, 0.2);
+    color: var(--saffron);
+    border-radius: 50px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+#booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    margin: 2rem auto 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+label {
+    font-size: 0.8rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 0.8rem;
+    border-radius: 4px;
+    color: white;
+    font-family: var(--font-sans);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
 .footer-icons {
+    font-size: 1.5rem;
     margin-top: 1rem;
-    font-size: 2rem;
-    opacity: 0.6;
+    letter-spacing: 15px;
 }
 
 @media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-
     .form-row {
         flex-direction: column;
     }
 
-    nav ul {
-        display: none;
+    .btn-secondary {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    .rashi-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

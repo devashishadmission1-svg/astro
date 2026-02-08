@@ -15,12 +15,12 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
 
-    // Dynamic Lighting
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xD4AF37, 2, 10);
-    pointLight.position.set(2, 3, 4);
+    const pointLight = new THREE.PointLight(0xD4AF37, 2, 100);
+    pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
     createBhaChakra();
@@ -70,23 +70,40 @@ function createBhaChakra() {
 function createKundali() {
     // A Janam Kundali is typically a square with diagonals
     const group = new THREE.Group();
+
     const material = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.4 });
 
-    // Square points
-    const points = [
-        new THREE.Vector3(-1, 1, 0),
-        new THREE.Vector3(1, 1, 0),
-        new THREE.Vector3(1, -1, 0),
-        new THREE.Vector3(-1, -1, 0),
-        new THREE.Vector3(-1, 1, 0), // Close square
-        new THREE.Vector3(1, -1, 0), // Diagonal 1
-        new THREE.Vector3(1, 1, 0),  // Move to corner
-        new THREE.Vector3(-1, -1, 0) // Diagonal 2
-    ];
+    // Outer square
+    const points = [];
+    points.push(new THREE.Vector3(-1, -1, 0));
+    points.push(new THREE.Vector3(1, -1, 0));
+    points.push(new THREE.Vector3(1, 1, 0));
+    points.push(new THREE.Vector3(-1, 1, 0));
+    points.push(new THREE.Vector3(-1, -1, 0));
 
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    kundali = new THREE.Line(geometry, material);
-    kundali.position.z = -2;
+    const square = new THREE.Line(geometry, material);
+    group.add(square);
+
+    // Diagonals
+    const diag1Points = [new THREE.Vector3(-1, -1, 0), new THREE.Vector3(1, 1, 0)];
+    const diag2Points = [new THREE.Vector3(1, -1, 0), new THREE.Vector3(-1, 1, 0)];
+
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(diag1Points), material));
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(diag2Points), material));
+
+    // Diamond center
+    const diamondPoints = [
+        new THREE.Vector3(0, 1, 0),
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(0, -1, 0),
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(0, 1, 0)
+    ];
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(diamondPoints), material));
+
+    kundali = group;
+    kundali.position.z = 2; // Closer to camera
     scene.add(kundali);
 }
 
@@ -97,35 +114,84 @@ function onWindowResize() {
 }
 
 function onMouseMove(event) {
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouseX = (event.clientX - window.innerWidth / 2) / 100;
+    mouseY = (event.clientY - window.innerHeight / 2) / 100;
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
     if (bhaChakra) {
-        bhaChakra.rotation.z += 0.002;
-        bhaChakra.rotation.x += (mouseY * 0.1 - bhaChakra.rotation.x) * 0.05;
-        bhaChakra.rotation.y += (mouseX * 0.1 - bhaChakra.rotation.y) * 0.05;
+        bhaChakra.rotation.z += 0.001; // Slower, more majestic rotation
+        // Smoother lerping for rotation
+        bhaChakra.rotation.x += (mouseY * 0.05 + Math.PI / 3 - bhaChakra.rotation.x) * 0.02;
+        bhaChakra.rotation.y += (mouseX * 0.05 - bhaChakra.rotation.y) * 0.02;
     }
 
     if (kundali) {
-        kundali.rotation.y += 0.005;
+        kundali.rotation.y += 0.003;
+        kundali.rotation.x = Math.sin(Date.now() * 0.0005) * 0.1;
     }
 
     renderer.render(scene, camera);
 }
 
-// Lenis Momentum Scrolling
-const lenis = new Lenis();
+function initSmoothScroll() {
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true
+    });
 
-function raf(time) {
-    lenis.raf(time);
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
     requestAnimationFrame(raf);
 }
 
-requestAnimationFrame(raf);
+function initGSAP() {
+    gsap.registerPlugin(ScrollTrigger);
 
-// Initialize Scene
+    gsap.from(".hero-content > *", {
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "power4.out"
+    });
+
+    gsap.from(".rashi-item", {
+        scrollTrigger: {
+            trigger: ".rashi-grid",
+            start: "top 80%"
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "back.out(1.7)"
+    });
+
+    gsap.from(".glass-card", {
+        scrollTrigger: {
+            trigger: ".expert-cards",
+            start: "top 80%"
+        },
+        x: (i) => i === 0 ? -100 : 100,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out"
+    });
+}
+
+// Update init to include new visual logic
+const originalInit = init;
+init = function () {
+    originalInit();
+    initSmoothScroll();
+    initGSAP();
+};
+
 init();
+

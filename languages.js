@@ -129,18 +129,16 @@ const translations = {
 
 let currentLang = 'ne';
 
-function toggleLanguage() {
-    currentLang = currentLang === 'ne' ? 'en' : 'ne';
-    updateContent();
-}
-
-function updateContent() {
+function updateLanguage(lang) {
+    currentLang = lang;
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        el.textContent = translations[currentLang][key];
+        el.textContent = translations[lang][key];
     });
-    document.getElementById('lang-toggle').textContent = translations[currentLang].lang_toggle;
+    document.getElementById('lang-toggle').textContent = translations[lang].lang_toggle;
+    document.documentElement.lang = lang;
 }
 
-document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
-updateContent();
+document.getElementById('lang-toggle').addEventListener('click', () => {
+    updateLanguage(currentLang === 'ne' ? 'en' : 'ne');
+});
