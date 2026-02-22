@@ -4,8 +4,10 @@
 
 :root {
     /* Core Colors - Yellow Palette */
-    --bg-primary: #000000;
-    --bg-secondary: #0a0a0a;
+    --bg-primary: #ffffff;
+    /* Pure White */
+    --bg-secondary: #fafafa;
+    /* Off-white */
 
     --yellow-1: #fffae5;
     --yellow-2: #fff6cc;
@@ -17,19 +19,22 @@
     --yellow-8: #ffdd32;
     --yellow-9: #ffd819;
     --yellow-10: #ffd400;
+    /* Pure bold yellow */
 
     --accent-pr: var(--yellow-10);
-    --accent-sec: var(--yellow-6);
+    --accent-sec: var(--yellow-8);
 
     /* Text Colors - Black & White strictly */
-    --text-main: #ffffff;
-    --text-muted: #e0e0e0;
+    --text-main: #000000;
+    /* Pure Black text for high contrast */
+    --text-muted: #333333;
+    /* Dark gray for secondary text */
 
     /* Glassmorphism Variables */
-    --glass-bg: rgba(20, 20, 20, 0.7);
-    --glass-border: rgba(255, 212, 0, 0.15);
-    /* Yellow 10 with alpha */
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    /* Light glass */
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
 
     /* Layout & Typography */
     --font-heading: 'Cinzel', serif;
@@ -69,7 +74,8 @@ body {
     height: 100vh;
     z-index: -1;
     pointer-events: none;
-    background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+    background: var(--bg-primary);
+    /* Pure white background */
 }
 
 .glow-orb {
@@ -179,7 +185,7 @@ h6 {
 }
 
 .overlay-glass {
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -239,13 +245,13 @@ h6 {
     border-left: none;
     border-right: none;
     border-radius: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .navbar.scrolled {
     padding: 0.8rem 0;
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .nav-content {
@@ -390,7 +396,7 @@ h6 {
 .title {
     font-size: 4rem;
     margin-bottom: 1.5rem;
-    color: #ffffff;
+    color: #000000;
     line-height: 1.1;
 }
 
@@ -510,7 +516,7 @@ h6 {
 .section-title {
     font-size: 2.8rem;
     margin-bottom: 1.5rem;
-    color: #fff;
+    color: #000000;
 }
 
 .text-center .section-tag::before {
@@ -604,7 +610,7 @@ h6 {
 .service-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: #fff;
+    color: #000000;
 }
 
 .service-card p {
@@ -676,7 +682,7 @@ h6 {
 .method h4 {
     font-family: var(--font-body);
     font-size: 1rem;
-    color: #fff;
+    color: #000000;
     margin-bottom: 0.3rem;
 }
 
@@ -712,11 +718,11 @@ h6 {
 
 .form-control {
     width: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 12px 16px;
-    color: #fff;
+    color: #000000;
     font-family: var(--font-body);
     font-size: 1rem;
     transition: var(--transition-smooth);
@@ -725,7 +731,7 @@ h6 {
 .form-control:focus {
     outline: none;
     border-color: var(--yellow-10);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 /* ==========================================================================
@@ -733,7 +739,7 @@ h6 {
    ========================================================================== */
 .footer {
     padding: 4rem 0 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
     margin-top: 4rem;
 }
 
@@ -754,7 +760,7 @@ h6 {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.05);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -770,7 +776,7 @@ h6 {
 }
 
 .copyright {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
