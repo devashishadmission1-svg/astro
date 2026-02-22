@@ -58,7 +58,7 @@ html {
 
 body {
     font-family: var(--font-body);
-    color: var(--text-main);
+    color: #000000;
     background-color: var(--bg-primary);
     line-height: 1.6;
     overflow-x: hidden;
@@ -275,7 +275,7 @@ h6 {
 }
 
 .nav-item {
-    color: var(--text-main);
+    color: #000000;
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -306,7 +306,7 @@ h6 {
     display: none;
     background: none;
     border: none;
-    color: var(--text-main);
+    color: #000000;
     font-size: 1.5rem;
     cursor: pointer;
 }
@@ -341,7 +341,7 @@ h6 {
     right: 2rem;
     background: none;
     border: none;
-    color: var(--text-main);
+    color: #000000;
     font-size: 2rem;
     cursor: pointer;
 }
@@ -354,7 +354,7 @@ h6 {
 }
 
 .mobile-nav-item {
-    color: var(--text-main);
+    color: #000000;
     text-decoration: none;
     font-size: 2rem;
     font-family: var(--font-heading);
