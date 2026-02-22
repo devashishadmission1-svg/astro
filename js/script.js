@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 btn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
-                btn.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                btn.style.background = 'linear-gradient(135deg, #ffffff, #e0e0e0)';
+                btn.style.color = '#000000';
 
                 setTimeout(() => {
                     contactForm.reset();
