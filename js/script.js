@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 btn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
-                btn.style.background = 'var(--gold-6)';
-                btn.style.color = '#000000';
+                btn.style.background = 'var(--saffron)';
+                btn.style.color = 'var(--text-on-saffron)';
 
                 setTimeout(() => {
                     contactForm.reset();
