@@ -1,4 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Splash Screen Logic
+    const splashScreen = document.getElementById('splash-screen');
+    const mantraLines = document.querySelectorAll('.mantra-line');
+    const skipSplash = sessionStorage.getItem('splashSeen');
+
+    if (splashScreen) {
+        if (!skipSplash) {
+            document.body.classList.add('no-scroll');
+            let currentLine = 0;
+
+            function showNextLine() {
+                if (currentLine < mantraLines.length) {
+                    mantraLines[currentLine].style.display = 'block';
+
+                    setTimeout(() => {
+                        mantraLines[currentLine].style.display = 'none';
+                        currentLine++;
+                        showNextLine();
+                    }, 3000); // Matches CSS animation duration
+                } else {
+                    splashScreen.classList.add('hidden');
+                    document.body.classList.remove('no-scroll');
+                    sessionStorage.setItem('splashSeen', 'true');
+                }
+            }
+
+            showNextLine();
+        } else {
+            splashScreen.style.display = 'none';
+        }
+    }
+
     // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
 
