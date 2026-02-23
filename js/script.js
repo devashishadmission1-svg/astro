@@ -21,59 +21,73 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
     }
 
-    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    closeMenuBtn.addEventListener('click', toggleMobileMenu);
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMobileMenu);
 
     mobileNavItems.forEach(item => {
         item.addEventListener('click', toggleMobileMenu);
+    });
+
+    // Parallax Effect for Hero
+    const heroVisual = document.querySelector('.hero-visual');
+    const orbs = document.querySelectorAll('.glow-orb');
+
+    document.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        const moveX = (clientX - centerX) / 40;
+        const moveY = (clientY - centerY) / 40;
+
+        if (heroVisual) {
+            heroVisual.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        }
+
+        orbs.forEach((orb, index) => {
+            const factor = (index + 1) * 15;
+            orb.style.transform = `translate(${moveX / factor}px, ${moveY / factor}px)`;
+        });
     });
 
     // Intersection Observer for Scroll Animations
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.15
+        threshold: 0.1
     };
 
     const animateOnScroll = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Add the appear class
                 entry.target.classList.add('appear');
-
-                // If it's a grid item that needs staggering we could do that,
-                // but we handled staggered delays via CSS utility classes on individual elements.
-
-                // Stop observing once animated
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    // Get all elements with animation classes
     const animatedElements = document.querySelectorAll(
         '.fade-in, .fade-in-up, .slide-in-left, .slide-in-right, .scale-up'
     );
 
     animatedElements.forEach(el => animateOnScroll.observe(el));
 
-    // Form Submission Details (simple prevention for visual logic)
+    // Form Submission Details
     const contactForm = document.getElementById('contactForm');
 
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = contactForm.querySelector('button[type="submit"]');
-            const originalText = btn.textContent;
+            const originalText = btn.innerHTML;
 
-            // Visual feedback
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             btn.style.opacity = '0.8';
             btn.disabled = true;
 
             setTimeout(() => {
                 btn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
-                btn.style.background = 'linear-gradient(135deg, #ffffff, #e0e0e0)';
+                btn.style.background = 'var(--gold-6)';
                 btn.style.color = '#000000';
 
                 setTimeout(() => {
