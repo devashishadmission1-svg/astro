@@ -385,12 +385,8 @@ h6 {
     width: 100%;
 }
 
-.nav-item:hover {
-    color: var(--text-main);
-}
-
 .nav-item:hover::after {
-    width: 25px;
+    width: 100%;
 }
 
 .mobile-menu-btn {
@@ -414,16 +410,17 @@ h6 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: var(--bg-primary);
     opacity: 0;
     pointer-events: none;
     transition: var(--transition-smooth);
-    transform: translateY(-20px);
+    transform: translateX(100%);
 }
 
 .mobile-menu.active {
     opacity: 1;
     pointer-events: all;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .close-menu-btn {
@@ -432,9 +429,10 @@ h6 {
     right: 2rem;
     background: none;
     border: none;
-    color: #000000;
-    font-size: 2rem;
+    color: var(--text-main);
+    font-size: 2.5rem;
     cursor: pointer;
+    padding: 1rem;
 }
 
 .mobile-links {
@@ -445,9 +443,10 @@ h6 {
 }
 
 .mobile-nav-item {
-    color: #000000;
+    color: var(--text-main);
     text-decoration: none;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
     font-family: var(--font-heading);
     transition: var(--transition-smooth);
 }
@@ -1063,11 +1062,29 @@ h6 {
 /* ==========================================================================
    Responsive Design
    ========================================================================== */
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+/* Tablet & Large Mobile (1024px and below) */
 @media (max-width: 1024px) {
+    :root {
+        --container-width: 95%;
+    }
+
+    .section-padding {
+        padding: 80px 0;
+    }
+
+    /* Hero */
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 2rem;
+        gap: 4rem;
+    }
+
+    .subtitle-wrapper {
+        justify-content: center;
     }
 
     .hero .description {
@@ -1078,15 +1095,19 @@ h6 {
         justify-content: center;
     }
 
+    .hero-visual {
+        max-width: 480px;
+    }
+
+    /* About */
     .about-grid {
         grid-template-columns: 1fr;
+        gap: 4rem;
     }
 
     .about-image-col {
         order: 2;
-        margin-top: 3rem;
-        margin-bottom: 2rem;
-        max-width: 500px;
+        max-width: 400px;
         margin-inline: auto;
     }
 
@@ -1095,43 +1116,34 @@ h6 {
         text-align: center;
     }
 
-    .section-tag::before {
-        left: -2rem;
-    }
-
     .section-tag {
         padding-left: 0;
     }
 
-    .section-tag::after {
-        content: '';
-        position: absolute;
-        right: -2rem;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1.2rem;
-        height: 2px;
-        background: var(--saffron);
+    .section-tag::before {
+        display: none;
     }
 
-    .services-grid {
+    .stats-grid {
+        justify-content: center;
+    }
+
+    /* Bento Grid */
+    .bento-grid-services {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
 
+    /* Contact */
     .contact-wrapper {
         grid-template-columns: 1fr;
     }
-
-    .contact-form-container {
-        border-radius: 0 0 16px 16px;
-        border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
 }
 
+/* Small Mobile (768px and below) */
 @media (max-width: 768px) {
     .title {
-        font-size: 2.8rem;
+        font-size: 3rem;
     }
 
     .navbar .nav-links {
@@ -1142,21 +1154,55 @@ h6 {
         display: block;
     }
 
-    .services-grid {
+    .bento-grid-services {
         grid-template-columns: 1fr;
     }
 
-    .stats-grid {
-        flex-direction: column;
-        gap: 1rem;
+    .service-card-medium,
+    .service-card-large {
+        grid-column: span 1;
     }
 
     .contact-info,
     .contact-form-container {
-        padding: 2rem;
+        padding: 3rem 2rem;
     }
 
-    .section-padding {
-        padding: 60px 0;
+    .footer {
+        padding: 40px 0;
+        text-align: center;
+    }
+
+    /* scale down orbs */
+    .orb-1,
+    .orb-2,
+    .orb-3 {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+/* Extra Small (480px and below) */
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.2rem;
+    }
+
+    .mantra-line {
+        font-size: 1.4rem;
     }
 }
