@@ -878,6 +878,42 @@ h6 {
     box-shadow: 0 0 15px rgba(255, 153, 51, 0.1);
 }
 
+.phone-input-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.country-code-select {
+    width: auto;
+    min-width: 110px;
+    flex-shrink: 0;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-row .form-group {
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 480px) {
+    .phone-input-group {
+        flex-direction: column;
+    }
+
+    .country-code-select {
+        width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
 /* ==========================================================================
    Footer
    ========================================================================== */
