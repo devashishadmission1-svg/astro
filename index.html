@@ -252,6 +252,13 @@
                         </div>
                         <button type="submit" class="btn btn-primary full-width">Send Message</button>
                     </form>
+
+                    <div id="adminSection" class="admin-actions" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); display: none; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; opacity: 0.6;">Owner Tools:</span>
+                        <button id="downloadExcelBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="fas fa-file-excel" style="margin-right: 0.5rem;"></i> Download All (.xlsx)
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -266,10 +273,11 @@
                 <a href="#"><i class="fab fa-instagram"></i></a>
                 <a href="#"><i class="fab fa-github"></i></a>
             </div>
-            <p class="copyright">&copy; 2026 Devashish Pathak. All rights reserved.</p>
+            <p class="copyright"><span id="adminTrigger" style="cursor: pointer;">&copy;</span> Designed and created by Devashish Pathak. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <script src="js/script.js"></script>
 </body>
 

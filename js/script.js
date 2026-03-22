@@ -106,19 +106,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form Submission Details
     const contactForm = document.getElementById('contactForm');
+    const downloadExcelBtn = document.getElementById('downloadExcelBtn');
+
+    // Helper to get all submissions from localStorage
+    function getSubmissions() {
+        const stored = localStorage.getItem('astro_submissions');
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    // Helper to save a single submission
+    function saveSubmission(data) {
+        const submissions = getSubmissions();
+        submissions.push({
+            ...data,
+            submittedAt: new Date().toLocaleString()
+        });
+        localStorage.setItem('astro_submissions', JSON.stringify(submissions));
+    }
 
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Capture Form Data
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: (document.getElementById('country-code').value || '') + ' ' + document.getElementById('phone').value,
+                dob: document.getElementById('dob').value,
+                tob: document.getElementById('tob').value,
+                pob: document.getElementById('pob').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
+            };
+
+            // Save to LocalStorage
+            saveSubmission(formData);
+
             const btn = contactForm.querySelector('button[type="submit"]');
             const originalText = btn.innerHTML;
 
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             btn.style.opacity = '0.8';
             btn.disabled = true;
 
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Message Sent';
+                btn.innerHTML = '<i class="fas fa-check"></i> Data Saved';
                 btn.style.background = 'var(--saffron)';
                 btn.style.color = 'var(--text-on-saffron)';
 
@@ -129,7 +161,69 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.style.opacity = '';
                     btn.disabled = false;
                 }, 3000);
-            }, 1500);
+            }, 1000);
         });
     }
+
+    // Excel Export Logic
+    if (downloadExcelBtn) {
+        downloadExcelBtn.addEventListener('click', () => {
+            const submissions = getSubmissions();
+            
+            if (submissions.length === 0) {
+                alert('No data to export yet. Please fill out the form first.');
+                return;
+            }
+
+            // Create a worksheet
+            const ws = XLSX.utils.json_to_sheet(submissions);
+            
+            // Create a workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Submissions");
+            
+            // Generate filename with current date
+            const date = new Date().toISOString().split('T')[0];
+            const filename = `astro_consultations_${date}.xlsx`;
+            
+            // Trigger download
+            XLSX.writeFile(wb, filename);
+        });
+    }
+
+    // Hidden Admin Trigger Logic
+    const adminTrigger = document.getElementById('adminTrigger');
+    const adminSection = document.getElementById('adminSection');
+
+    function checkAdminState() {
+        if (sessionStorage.getItem('isAdmin') === 'true') {
+            if (adminSection) {
+                adminSection.style.display = 'flex';
+            }
+        }
+    }
+
+    if (adminTrigger) {
+        adminTrigger.addEventListener('click', () => {
+            if (sessionStorage.getItem('isAdmin') === 'true') {
+                // If already logged in, toggle off
+                sessionStorage.removeItem('isAdmin');
+                if (adminSection) adminSection.style.display = 'none';
+                return;
+            }
+
+            const password = prompt('Enter Admin Password:');
+            if (password === 'kankali1975') {
+                sessionStorage.setItem('isAdmin', 'true');
+                if (adminSection) adminSection.style.display = 'flex';
+                // Scroll into view
+                if (adminSection) adminSection.scrollIntoView({ behavior: 'smooth' });
+            } else if (password !== null) {
+                alert('Incorrect password.');
+            }
+        });
+    }
+
+    // Run check on load
+    checkAdminState();
 });
