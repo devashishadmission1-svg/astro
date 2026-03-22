@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form Submission Details
     const contactForm = document.getElementById('contactForm');
-    const downloadExcelBtn = document.getElementById('downloadExcelBtn');
 
     // Helper to get all submissions from localStorage
     function getSubmissions() {
@@ -164,66 +163,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         });
     }
-
-    // Excel Export Logic
-    if (downloadExcelBtn) {
-        downloadExcelBtn.addEventListener('click', () => {
-            const submissions = getSubmissions();
-            
-            if (submissions.length === 0) {
-                alert('No data to export yet. Please fill out the form first.');
-                return;
-            }
-
-            // Create a worksheet
-            const ws = XLSX.utils.json_to_sheet(submissions);
-            
-            // Create a workbook
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Submissions");
-            
-            // Generate filename with current date
-            const date = new Date().toISOString().split('T')[0];
-            const filename = `astro_consultations_${date}.xlsx`;
-            
-            // Trigger download
-            XLSX.writeFile(wb, filename);
-        });
-    }
-
-    // Hidden Admin Trigger Logic
-    const adminTrigger = document.getElementById('adminTrigger');
-    const adminSection = document.getElementById('adminSection');
-
-    function checkAdminState() {
-        if (sessionStorage.getItem('isAdmin') === 'true') {
-            if (adminSection) {
-                adminSection.style.display = 'flex';
-            }
-        }
-    }
-
-    if (adminTrigger) {
-        adminTrigger.addEventListener('click', () => {
-            if (sessionStorage.getItem('isAdmin') === 'true') {
-                // If already logged in, toggle off
-                sessionStorage.removeItem('isAdmin');
-                if (adminSection) adminSection.style.display = 'none';
-                return;
-            }
-
-            const password = prompt('Enter Admin Password:');
-            if (password === 'kankali1975') {
-                sessionStorage.setItem('isAdmin', 'true');
-                if (adminSection) adminSection.style.display = 'flex';
-                // Scroll into view
-                if (adminSection) adminSection.scrollIntoView({ behavior: 'smooth' });
-            } else if (password !== null) {
-                alert('Incorrect password.');
-            }
-        });
-    }
-
-    // Run check on load
-    checkAdminState();
 });
