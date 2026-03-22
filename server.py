@@ -36,7 +36,11 @@ def submit():
             df = pd.DataFrame([new_row])
 
         # Write to Excel
-        df.to_excel(EXCEL_FILE, index=False)
+        try:
+            df.to_excel(EXCEL_FILE, index=False)
+        except PermissionError:
+            print(f"❌ Error: Could not write to {EXCEL_FILE}. Is it open in another program?")
+            return jsonify({"error": "The Excel file is currently open in another program. Please close it and try again."}), 500
         
         print(f"✅ Saved entry for {new_row['Name']} to {EXCEL_FILE}")
         return jsonify({"message": "Successfully saved to Excel!"}), 200
