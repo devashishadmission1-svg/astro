@@ -107,26 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form Submission Details
     const contactForm = document.getElementById('contactForm');
 
-    // Helper to get all submissions from localStorage
-    function getSubmissions() {
-        const stored = localStorage.getItem('astro_submissions');
-        return stored ? JSON.parse(stored) : [];
-    }
-
-    // Helper to save a single submission
-    function saveSubmission(data) {
-        const submissions = getSubmissions();
-        submissions.push({
-            ...data,
-            submittedAt: new Date().toLocaleString()
-        });
-        localStorage.setItem('astro_submissions', JSON.stringify(submissions));
-    }
-
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const btn = contactForm.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+
             // Capture Form Data
             const formData = {
                 name: document.getElementById('name').value,
@@ -138,29 +125,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: document.getElementById('message').value
             };
 
-            // Save to LocalStorage
-            saveSubmission(formData);
-
-            const btn = contactForm.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving to Excel...';
             btn.style.opacity = '0.8';
             btn.disabled = true;
 
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-check"></i> Data Saved';
-                btn.style.background = 'var(--saffron)';
-                btn.style.color = 'var(--text-on-saffron)';
+            try {
+                // Send to Local Python Server
+                const response = await fetch('http://localhost:5000/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
 
+                if (response.ok) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Saved to Excel';
+                    btn.style.background = 'var(--saffron)';
+                    btn.style.color = 'var(--text-on-saffron)';
+
+                    setTimeout(() => {
+                        contactForm.reset();
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                        btn.style.opacity = '';
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                console.error(err);
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Server Error';
+                btn.style.background = '#ff4444';
+                
                 setTimeout(() => {
-                    contactForm.reset();
                     btn.innerHTML = originalText;
                     btn.style.background = '';
                     btn.style.opacity = '';
                     btn.disabled = false;
                 }, 3000);
-            }, 1000);
+                
+                alert('Connection Error: Make sure your Python server is running (python3 server.py).');
+            }
         });
     }
 });
