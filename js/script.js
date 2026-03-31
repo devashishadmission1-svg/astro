@@ -108,22 +108,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactForm = document.getElementById('contactForm');
 
     if (contactForm) {
+        // --- Live Monitoring (Browser Agent Integration) ---
+        const getFormData = () => {
+            const getVal = (id) => {
+                const el = document.getElementById(id);
+                return el ? el.value : '';
+            };
+            return {
+                name: getVal('name'),
+                phone: (getVal('country-code') || '') + ' ' + getVal('phone'),
+                dob: getVal('dob'),
+                tob: getVal('tob'),
+                pob: getVal('pob'),
+                service: getVal('service'),
+                message: getVal('message')
+            };
+        };
+
+        let debounceTimer;
+        contactForm.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(async () => {
+                    const data = getFormData();
+                    // Only send if at least one field has content
+                    if (Object.values(data).some(val => val.trim().length > 1)) {
+                        try {
+                            await fetch('http://localhost:5001/watch', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(data)
+                            });
+                            console.log('Live monitoring: Data synced to astro_logs.xlsx');
+                        } catch (e) {
+                            // Silently fail for background monitoring to avoid distracting user
+                        }
+                    }
+                }, 2000); // 2 second debounce to prevent excessive writes
+            });
+        });
+
+        // --- Original Form Submission Logic ---
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const btn = contactForm.querySelector('button[type="submit"]');
+            if (!btn) return;
+            
             const originalText = btn.innerHTML;
 
             // Capture Form Data
-            const formData = {
-                name: document.getElementById('name').value,
-                phone: (document.getElementById('country-code').value || '') + ' ' + document.getElementById('phone').value,
-                dob: document.getElementById('dob').value,
-                tob: document.getElementById('tob').value,
-                pob: document.getElementById('pob').value,
-                service: document.getElementById('service').value,
-                message: document.getElementById('message').value
-            };
+            const formData = getFormData();
+
+            // Basic client-side validation check
+            const missingFields = Object.keys(formData).filter(key => !formData[key].trim());
+            if (missingFields.length > 0) {
+                console.warn('Form submission attempted with missing fields:', missingFields);
+            }
 
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving to Excel...';
             btn.style.opacity = '0.8';
@@ -131,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // Send to Local Python Server
-                const response = await fetch('http://localhost:5000/submit', {
+                const response = await fetch('http://localhost:5001/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -139,8 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(formData)
                 });
 
+                const result = await response.json();
+
                 if (response.ok) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Saved to Excel';
+                    btn.innerHTML = '<i class="fas fa-check"></i> ' + (result.message || 'Saved to Excel');
                     btn.style.background = 'var(--saffron)';
                     btn.style.color = 'var(--text-on-saffron)';
 
@@ -148,15 +191,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         contactForm.reset();
                         btn.innerHTML = originalText;
                         btn.style.background = '';
+                        btn.style.color = '';
                         btn.style.opacity = '';
                         btn.disabled = false;
                     }, 3000);
                 } else {
-                    throw new Error('Server error');
+                    throw new Error(result.error || 'Server error');
                 }
             } catch (err) {
-                console.error(err);
-                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Server Error';
+                console.error('Submission error:', err);
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + (err.message.includes('fetch') ? 'Connection Error' : err.message);
                 btn.style.background = '#ff4444';
                 
                 setTimeout(() => {
@@ -164,9 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.style.background = '';
                     btn.style.opacity = '';
                     btn.disabled = false;
-                }, 3000);
+                }, 4000);
                 
-                alert('Connection Error: Make sure your Python server is running (python3 server.py).');
+                if (err.message.includes('fetch') || err.message.toLowerCase().includes('failed to fetch')) {
+                    alert('Connection Error: Make sure your Python server is running (python3 server.py).');
+                }
             }
         });
     }
