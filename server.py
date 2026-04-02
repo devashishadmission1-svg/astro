@@ -156,8 +156,8 @@ def payment_submit():
 @app.route('/admin/login', methods=['POST'])
 def admin_login():
     data = request.json
-    pwd = data.get('password', '')
-    if hashlib.sha256(pwd.encode()).hexdigest() == ADMIN_HASH:
+    pwd_hash = data.get('passwordHash', '')
+    if pwd_hash == ADMIN_HASH:
         return jsonify({"success": True, "token": ADMIN_HASH})
     return jsonify({"success": False}), 401
 
