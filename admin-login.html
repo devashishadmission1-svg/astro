@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Devashish Astro</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-box fade-in-up">
+            <h2>Admin Portal</h2>
+            <p>Enter owner credentials to access the dashboard.</p>
+
+            <form id="adminLoginForm" class="contact-form">
+                <div class="form-group" style="text-align: left;">
+                    <label for="admin-password">Password</label>
+                    <input type="password" id="admin-password" required class="form-control" placeholder="Enter secure password">
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Unlock Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('adminLoginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const pwd = document.getElementById('admin-password').value;
+                    const btn = loginForm.querySelector('button');
+                    const originalText = btn.innerHTML;
+
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                    btn.disabled = true;
+
+                    try {
+                        const response = await fetch('http://localhost:5001/admin/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: pwd })
+                        });
+
+                        const result = await response.json();
+                        if (response.ok && result.success) {
+                            btn.innerHTML = '<i class="fas fa-unlock"></i> Access Granted';
+                            btn.style.background = '#4CAF50';
+                            
+                            // Store token locally and redirect
+                            sessionStorage.setItem('adminToken', result.token);
+                            
+                            setTimeout(() => {
+                                window.location.href = 'admin-dashboard.html';
+                            }, 1000);
+                        } else {
+                            throw new Error("Invalid password");
+                        }
+                    } catch (err) {
+                        btn.innerHTML = '<i class="fas fa-times"></i> Access Denied';
+                        btn.style.background = '#f44336';
+                        
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                            btn.style.background = '';
+                        }, 2000);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

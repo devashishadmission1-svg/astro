@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Devashish Astro</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation (Minimal) -->
+    <nav class="navbar glass-effect" id="navbar">
+        <div class="nav-content container">
+            <a href="index.html" class="logo">Devashish Astro</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-item">Return Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box fade-in-up">
+            <h2>Complete Your Booking</h2>
+            <p>Please scan either QR code to proceed with payment.</p>
+
+            <div class="qr-container">
+                <div class="qr-box">
+                    <img src="assets/qr1.png" alt="Bank QR">
+                    <p>Bank Transfer</p>
+                </div>
+                <div class="qr-box">
+                    <img src="assets/qr2.png" alt="eSewa QR">
+                    <p>eSewa Wallet</p>
+                </div>
+            </div>
+
+            <form id="paymentForm" class="contact-form">
+                <div class="form-group" style="text-align: left;">
+                    <label for="pay-name">Name</label>
+                    <input type="text" id="pay-name" required class="form-control" placeholder="Your Name">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="pay-phone">Phone Number</label>
+                    <input type="text" id="pay-phone" required class="form-control" placeholder="Your Phone Number">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="tx-id">Transaction Reference ID</label>
+                    <input type="text" id="tx-id" required class="form-control" placeholder="Bank/eSewa Transaction ID">
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Submit Payment Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const paymentForm = document.getElementById('paymentForm');
+            if (paymentForm) {
+                paymentForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const sessionId = urlParams.get('session');
+                    
+                    if (!sessionId) {
+                        alert("Session invalid or expired. Please start over.");
+                        window.location.href = 'index.html';
+                        return;
+                    }
+
+                    const txId = document.getElementById('tx-id').value;
+                    const btn = paymentForm.querySelector('button');
+                    const originalText = btn.innerHTML;
+
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    btn.disabled = true;
+
+                    try {
+                        const response = await fetch('http://localhost:5001/payment_submit', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                sessionId: sessionId,
+                                transactionId: txId
+                            })
+                        });
+
+                        if (response.ok) {
+                            btn.innerHTML = '<i class="fas fa-check"></i> Booking Pending Confirmation';
+                            btn.style.background = '#4CAF50';
+                            
+                            setTimeout(() => {
+                                alert("Thank you! Your booking is now PENDING review. We will contact you shortly.");
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        } else {
+                            throw new Error("Unable to save. Please try again.");
+                        }
+                    } catch (err) {
+                        alert(err.message);
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

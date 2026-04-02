@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Devashish Astro</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect" id="navbar">
+        <div class="nav-content container">
+            <a href="index.html" class="logo">Devashish Astro - Admin</a>
+            <div class="nav-links">
+                <a href="#" class="nav-item" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container dashboard-container fade-in-up">
+        <div class="dashboard-grid">
+            <!-- Pending Section -->
+            <div class="dash-panel">
+                <h3><i class="fas fa-clock text-saffron"></i> Pending Consultations</h3>
+                <div id="pending-list">
+                    <p style="color: var(--text-dim);">Loading...</p>
+                </div>
+            </div>
+
+            <!-- Confirmed Section -->
+            <div class="dash-panel">
+                <h3><i class="fas fa-check-circle" style="color: #4CAF50;"></i> Confirmed Consultations</h3>
+                <div id="confirmed-list">
+                    <p style="color: var(--text-dim);">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = sessionStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                sessionStorage.removeItem('adminToken');
+                window.location.href = 'index.html';
+            });
+
+            async function fetchBookings() {
+                try {
+                    const response = await fetch('http://localhost:5001/admin/bookings', {
+                        headers: { 'Authorization': token }
+                    });
+                    
+                    if (!response.ok) throw new Error("Unauthorized");
+                    
+                    const data = await response.json();
+                    renderBookings('pending', data.pending);
+                    renderBookings('confirmed', data.confirmed);
+                } catch (err) {
+                    console.error(err);
+                    alert("Session expired or unauthorized.");
+                    window.location.href = 'admin-login.html';
+                }
+            }
+
+            function renderBookings(type, bookings) {
+                const container = document.getElementById(`${type}-list`);
+                container.innerHTML = '';
+
+                if (!bookings || bookings.length === 0) {
+                    container.innerHTML = `<p style="color: var(--text-dim);">No ${type} bookings.</p>`;
+                    return;
+                }
+
+                bookings.forEach(b => {
+                    const card = document.createElement('div');
+                    card.className = `booking-card ${type === 'confirmed' ? 'confirmed' : ''}`;
+                    
+                    let html = `
+                        <div class="booking-details">
+                            <span><strong>Name:</strong> ${b.Name || 'N/A'}</span>
+                            <span><strong>Service:</strong> ${b.Service || 'N/A'}</span>
+                            <span><strong>Date:</strong> ${b.Date || 'N/A'}</span>
+                            <span><strong>Txn Ref:</strong> ${b.TransactionID || 'N/A'}</span>
+                        </div>
+                    `;
+
+                    if (type === 'pending') {
+                        html += `
+                            <div class="btn-group">
+                                <button class="btn-small btn-confirm" onclick="updateBooking('${b.SessionID}', 'confirm')">Confirm</button>
+                                <button class="btn-small btn-reject" onclick="updateBooking('${b.SessionID}', 'reject')">Reject</button>
+                            </div>
+                        `;
+                    }
+                    
+                    card.innerHTML = html;
+                    container.appendChild(card);
+                });
+            }
+
+            window.updateBooking = async (sessionId, action) => {
+                try {
+                    const res = await fetch('http://localhost:5001/admin/update', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': token
+                        },
+                        body: JSON.stringify({ sessionId, action })
+                    });
+                    if (res.ok) {
+                        fetchBookings(); // Refresh UI
+                    } else {
+                        alert("Error updating booking.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            };
+
+            fetchBookings();
+        });
+    </script>
+</body>
+</html>

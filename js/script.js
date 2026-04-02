@@ -109,12 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (contactForm) {
         // --- Live Monitoring (Browser Agent Integration) ---
+        const sessionId = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        const syncStatus = document.getElementById('sync-status');
+        const syncText = syncStatus ? syncStatus.querySelector('.sync-text') : null;
+
         const getFormData = () => {
             const getVal = (id) => {
                 const el = document.getElementById(id);
                 return el ? el.value : '';
             };
             return {
+                sessionId: sessionId,
                 name: getVal('name'),
                 phone: (getVal('country-code') || '') + ' ' + getVal('phone'),
                 dob: getVal('dob'),
@@ -125,26 +130,45 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         };
 
+        const updateSyncStatus = (status) => {
+            if (!syncStatus) return;
+            syncStatus.classList.add('active');
+            if (status === 'syncing') {
+                syncStatus.classList.add('syncing');
+                if (syncText) syncText.innerText = 'Agent Manager: Syncing...';
+            } else if (status === 'saved') {
+                syncStatus.classList.remove('syncing');
+                if (syncText) syncText.innerText = 'Agent Manager: Data Secure';
+                setTimeout(() => {
+                    syncStatus.classList.remove('active');
+                }, 3000);
+            }
+        };
+
         let debounceTimer;
         contactForm.querySelectorAll('input, select, textarea').forEach(el => {
             el.addEventListener('input', () => {
                 clearTimeout(debounceTimer);
+                updateSyncStatus('syncing');
                 debounceTimer = setTimeout(async () => {
                     const data = getFormData();
-                    // Only send if at least one field has content
-                    if (Object.values(data).some(val => val.trim().length > 1)) {
+                    // Only send if name or other key fields are touched
+                    if (data.name.trim().length > 1 || data.message.trim().length > 5) {
                         try {
-                            await fetch('http://localhost:5001/watch', {
+                            const response = await fetch('http://localhost:5001/watch', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(data)
                             });
-                            console.log('Live monitoring: Data synced to astro_logs.xlsx');
+                            if (response.ok) {
+                                console.log('Live monitoring: Session data synced.');
+                                updateSyncStatus('saved');
+                            }
                         } catch (e) {
-                            // Silently fail for background monitoring to avoid distracting user
+                            // Silently fail for background monitoring
                         }
                     }
-                }, 2000); // 2 second debounce to prevent excessive writes
+                }, 2000);
             });
         });
 
@@ -183,18 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> ' + (result.message || 'Saved to Excel');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Redirecting to Payment...';
                     btn.style.background = 'var(--saffron)';
                     btn.style.color = 'var(--text-on-saffron)';
 
                     setTimeout(() => {
-                        contactForm.reset();
-                        btn.innerHTML = originalText;
-                        btn.style.background = '';
-                        btn.style.color = '';
-                        btn.style.opacity = '';
-                        btn.disabled = false;
-                    }, 3000);
+                        window.location.href = `payment.html?session=${sessionId}`;
+                    }, 1500);
                 } else {
                     throw new Error(result.error || 'Server error');
                 }
@@ -216,4 +235,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Custom Cursor Logic ---
+    const cursorDot = document.createElement('div');
+    cursorDot.classList.add('cursor-dot');
+    document.body.appendChild(cursorDot);
+
+    const cursorOutline = document.createElement('div');
+    cursorOutline.classList.add('cursor-outline');
+    document.body.appendChild(cursorOutline);
+
+    window.addEventListener('mousemove', (e) => {
+        cursorDot.style.left = `${e.clientX}px`;
+        cursorDot.style.top = `${e.clientY}px`;
+        
+        cursorOutline.animate({
+            left: `${e.clientX}px`,
+            top: `${e.clientY}px`
+        }, { duration: 500, fill: "forwards" });
+    });
+
+    document.querySelectorAll('a, button, input, textarea, select, .mobile-menu-btn, .close-menu-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursorOutline.style.width = '60px';
+            cursorOutline.style.height = '60px';
+            cursorOutline.style.backgroundColor = 'rgba(255, 153, 51, 0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursorOutline.style.width = '40px';
+            cursorOutline.style.height = '40px';
+            cursorOutline.style.backgroundColor = 'transparent';
+        });
+    });
+
 });
