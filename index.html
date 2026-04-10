@@ -27,6 +27,17 @@
             <span class="mantra-line">मङ्गलाय तनो हरिः ॥</span>
         </div>
     </div>
+    <script>
+        // Emergency Fail-safe: Ensure site is never stuck on black screen
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            if (splash && !splash.classList.contains('hidden')) {
+                splash.classList.add('hidden');
+                document.body.classList.remove('no-scroll');
+                console.warn('Emergency fail-safe: Splash screen forced to hide.');
+            }
+        }, 5000);
+    </script>
 
     <div class="background-effects">
         <div class="glow-orb orb-1"></div>

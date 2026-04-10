@@ -5,29 +5,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const skipSplash = sessionStorage.getItem('splashSeen');
 
     if (splashScreen) {
-        if (!skipSplash) {
-            document.body.classList.add('no-scroll');
-            let currentLine = 0;
+        try {
+            if (!skipSplash) {
+                document.body.classList.add('no-scroll');
+                let currentLine = 0;
 
-            function showNextLine() {
-                if (currentLine < mantraLines.length) {
-                    mantraLines[currentLine].style.display = 'block';
+                function showNextLine() {
+                    if (currentLine < mantraLines.length) {
+                        mantraLines[currentLine].style.display = 'block';
 
-                    setTimeout(() => {
-                        mantraLines[currentLine].style.display = 'none';
-                        currentLine++;
-                        showNextLine();
-                    }, 3000); // Matches CSS animation duration
-                } else {
-                    splashScreen.classList.add('hidden');
-                    document.body.classList.remove('no-scroll');
-                    sessionStorage.setItem('splashSeen', 'true');
+                        setTimeout(() => {
+                            mantraLines[currentLine].style.display = 'none';
+                            currentLine++;
+                            showNextLine();
+                        }, 3000); // Matches CSS animation duration
+                    } else {
+                        splashScreen.classList.add('hidden');
+                        document.body.classList.remove('no-scroll');
+                        sessionStorage.setItem('splashSeen', 'true');
+                    }
                 }
-            }
 
-            showNextLine();
-        } else {
-            splashScreen.style.display = 'none';
+                showNextLine();
+            } else {
+                splashScreen.style.display = 'none';
+            }
+        } catch (e) {
+            console.error('Splash screen error:', e);
+            splashScreen.classList.add('hidden');
+            document.body.classList.remove('no-scroll');
         }
     }
 
