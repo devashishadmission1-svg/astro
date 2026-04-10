@@ -78,8 +78,9 @@ body {
 .glow-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.1;
+    will-change: transform;
+    pointer-events: none;
+    transform: translateZ(0);
     animation: floatOrb 25s infinite alternate ease-in-out;
 }
 
@@ -972,27 +973,6 @@ h6 {
     opacity: 1;
 }
 
-/* ==========================================================================
-   Splash Screen
-   ========================================================================== */
-.splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 1s ease-in-out, visibility 1s;
-}
-
-.splash-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
 
 .mantra-container {
     text-align: center;
@@ -1294,10 +1274,11 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    transform: translate(-50%, -50%);
     border-radius: 50%;
-    z-index: 9999;
+    z-index: 10000;
     pointer-events: none;
+    will-change: transform;
+    transform: translate(-50%, -50%) translateZ(0);
 }
 .cursor-dot {
     width: 6px;
@@ -1308,7 +1289,7 @@ body {
     width: 40px;
     height: 40px;
     border: 2px solid rgba(255, 153, 51, 0.5);
-    transition: width 0.2s, height 0.2s;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
 }
 
 /* Auth / Payment Layout Forms */

@@ -18,26 +18,6 @@
 </head>
 
 <body>
-    <!-- Splash Screen -->
-    <div id="splash-screen" class="splash-screen">
-        <div class="mantra-container">
-            <span class="mantra-line">ॐ मङ्गलं भगवान् विष्णुः</span>
-            <span class="mantra-line">मङ्गलं गरुडध्वजः ।</span>
-            <span class="mantra-line">मङ्गलं पुण्डरीकाक्षः</span>
-            <span class="mantra-line">मङ्गलाय तनो हरिः ॥</span>
-        </div>
-    </div>
-    <script>
-        // Emergency Fail-safe: Ensure site is never stuck on black screen
-        setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            if (splash && !splash.classList.contains('hidden')) {
-                splash.classList.add('hidden');
-                document.body.classList.remove('no-scroll');
-                console.warn('Emergency fail-safe: Splash screen forced to hide.');
-            }
-        }, 5000);
-    </script>
 
     <div class="background-effects">
         <div class="glow-orb orb-1"></div>
