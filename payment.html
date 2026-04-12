@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ne">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - Devashish Astro</title>
+    <title>भुक्तानी - देबाशिष एस्ट्रो</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -19,43 +19,43 @@
     <!-- Navigation (Minimal) -->
     <nav class="navbar glass-effect" id="navbar">
         <div class="nav-content container">
-            <a href="index.html" class="logo">Devashish Astro</a>
+            <a href="index.html" class="logo">देबाशिष एस्ट्रो</a>
             <div class="nav-links">
-                <a href="index.html" class="nav-item">Return Home</a>
+                <a href="index.html" class="nav-item">गृहपृष्ठमा फर्कनुहोस्</a>
             </div>
         </div>
     </nav>
 
     <div class="auth-container">
         <div class="auth-box fade-in-up">
-            <h2>Complete Your Booking</h2>
-            <p>Please scan either QR code to proceed with payment.</p>
+            <h2>आफ्नो बुकिङ पूरा गर्नुहोस्</h2>
+            <p>कृपया भुक्तानी अगाडि बढाउन कुनै पनि QR कोड स्क्यान गर्नुहोस्।</p>
 
             <div class="qr-container">
                 <div class="qr-box">
                     <img src="assets/qr1.png" alt="Bank QR">
-                    <p>Bank Transfer</p>
+                    <p>बैंक स्थानान्तरण</p>
                 </div>
                 <div class="qr-box">
                     <img src="assets/qr2.png" alt="eSewa QR">
-                    <p>eSewa Wallet</p>
+                    <p>ईसेवा वालेट</p>
                 </div>
             </div>
 
             <form id="paymentForm" class="contact-form">
                 <div class="form-group" style="text-align: left;">
-                    <label for="pay-name">Name</label>
-                    <input type="text" id="pay-name" required class="form-control" placeholder="Your Name">
+                    <label for="pay-name">नाम</label>
+                    <input type="text" id="pay-name" required class="form-control" placeholder="तपाईंको नाम">
                 </div>
                 <div class="form-group" style="text-align: left;">
-                    <label for="pay-phone">Phone Number</label>
-                    <input type="text" id="pay-phone" required class="form-control" placeholder="Your Phone Number">
+                    <label for="pay-phone">फोन नम्बर</label>
+                    <input type="text" id="pay-phone" required class="form-control" placeholder="तपाईंको फोन नम्बर">
                 </div>
                 <div class="form-group" style="text-align: left;">
-                    <label for="tx-id">Transaction Reference ID</label>
-                    <input type="text" id="tx-id" required class="form-control" placeholder="Bank/eSewa Transaction ID">
+                    <label for="tx-id">लेनदेन सन्दर्भ आईडी</label>
+                    <input type="text" id="tx-id" required class="form-control" placeholder="बैंक/ईसेवा लेनदेन आईडी">
                 </div>
-                <button type="submit" class="btn btn-primary full-width">Submit Payment Details</button>
+                <button type="submit" class="btn btn-primary full-width">भुक्तानी विवरण बुझाउनुहोस्</button>
             </form>
         </div>
     </div>
@@ -72,7 +72,7 @@
                     const sessionId = urlParams.get('session');
                     
                     if (!sessionId) {
-                        alert("Session invalid or expired. Please start over.");
+                        alert("सत्र अमान्य वा समाप्त भयो। कृपया फेरि प्रयास गर्नुहोस्।");
                         window.location.href = 'index.html';
                         return;
                     }
@@ -81,7 +81,7 @@
                     const btn = paymentForm.querySelector('button');
                     const originalText = btn.innerHTML;
 
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रशोधन हुँदैछ...';
                     btn.disabled = true;
 
                     try {
@@ -95,15 +95,15 @@
                         });
 
                         if (response.ok) {
-                            btn.innerHTML = '<i class="fas fa-check"></i> Booking Pending Confirmation';
+                            btn.innerHTML = '<i class="fas fa-check"></i> बुकिङ पुष्टिको प्रतीक्षामा';
                             btn.style.background = '#4CAF50';
                             
                             setTimeout(() => {
-                                alert("Thank you! Your booking is now PENDING review. We will contact you shortly.");
+                                alert("धन्यवाद! तपाईंको बुकिङ अहिले समीक्षाको क्रममा छ। हामी तपाईंलाई छिट्टै सम्पर्क गर्नेछौं।");
                                 window.location.href = 'index.html';
                             }, 2000);
                         } else {
-                            throw new Error("Unable to save. Please try again.");
+                            throw new Error("बचत गर्न असमर्थ। कृपया पुन: प्रयास गर्नुहोस्।");
                         }
                     } catch (err) {
                         alert(err.message);

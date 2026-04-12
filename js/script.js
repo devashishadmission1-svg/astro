@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalText = btn.innerHTML;
             const formData = getFormData();
 
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> बचत हुँदैछ...';
             btn.disabled = true;
 
             try {
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Redirecting...';
+                    btn.innerHTML = '<i class="fas fa-check"></i> पुन: निर्देशित गर्दै...';
                     btn.style.background = 'var(--saffron)';
                     setTimeout(() => {
                         window.location.href = `payment.html?session=${sessionId}`;
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error('Server error');
                 }
             } catch (err) {
-                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> त्रुटि';
                 btn.style.background = '#ff4444';
                 setTimeout(() => {
                     btn.innerHTML = originalText;

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ne">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal - Devashish Astro</title>
+    <title>एडमिन पोर्टल - देबाशिष एस्ट्रो</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -18,15 +18,15 @@
 
     <div class="auth-container">
         <div class="auth-box fade-in-up">
-            <h2>Admin Portal</h2>
-            <p>Enter owner credentials to access the dashboard.</p>
+            <h2>एडमिन पोर्टल</h2>
+            <p>ड्यासबोर्डमा पहुँच गर्न मालिकको प्रमाणहरू प्रविष्ट गर्नुहोस्।</p>
 
             <form id="adminLoginForm" class="contact-form">
                 <div class="form-group" style="text-align: left;">
-                    <label for="admin-password">Password</label>
-                    <input type="password" id="admin-password" required class="form-control" placeholder="Enter secure password">
+                    <label for="admin-password">पासवर्ड</label>
+                    <input type="password" id="admin-password" required class="form-control" placeholder="सुरक्षित पासवर्ड प्रविष्ट गर्नुहोस्">
                 </div>
-                <button type="submit" class="btn btn-primary full-width">Unlock Dashboard</button>
+                <button type="submit" class="btn btn-primary full-width">ड्यासबोर्ड खोल्नुहोस्</button>
             </form>
         </div>
     </div>
@@ -43,7 +43,7 @@
                         const btn = loginForm.querySelector('button');
                         const originalText = btn.innerHTML;
 
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> प्रमाणित गर्दै...';
                         btn.disabled = true;
 
                         // Secure client-side hashing
@@ -61,7 +61,7 @@
 
                         const result = await response.json();
                         if (response.ok && result.success) {
-                            btn.innerHTML = '<i class="fas fa-unlock"></i> Access Granted';
+                            btn.innerHTML = '<i class="fas fa-unlock"></i> पहुँच प्रदान गरियो';
                             btn.style.background = '#4CAF50';
                             
                             // Store token locally and redirect
@@ -74,7 +74,7 @@
                             throw new Error("Invalid password");
                         }
                     } catch (err) {
-                        btn.innerHTML = '<i class="fas fa-times"></i> Access Denied';
+                        btn.innerHTML = '<i class="fas fa-times"></i> पहुँच अस्वीकार गरियो';
                         btn.style.background = '#f44336';
                         
                         setTimeout(() => {

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ne">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Devashish Astro</title>
+    <title>एडमिन ड्यासबोर्ड - देबाशिष एस्ट्रो</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
@@ -23,9 +23,9 @@
     <!-- Navigation -->
     <nav class="navbar glass-effect" id="navbar">
         <div class="nav-content container">
-            <a href="index.html" class="logo">Devashish Astro - Admin</a>
+            <a href="index.html" class="logo">देबाशिष एस्ट्रो - एडमिन</a>
             <div class="nav-links">
-                <a href="#" class="nav-item" id="logoutBtn">Logout</a>
+                <a href="#" class="nav-item" id="logoutBtn">लगआउट</a>
             </div>
         </div>
     </nav>
@@ -34,17 +34,17 @@
         <div class="dashboard-grid">
             <!-- Pending Section -->
             <div class="dash-panel">
-                <h3><i class="fas fa-clock text-saffron"></i> Pending Consultations</h3>
+                <h3><i class="fas fa-clock text-saffron"></i> प्रतीक्षारत परामर्शहरू</h3>
                 <div id="pending-list">
-                    <p style="color: var(--text-dim);">Loading...</p>
+                    <p style="color: var(--text-dim);">लोड हुँदैछ...</p>
                 </div>
             </div>
 
             <!-- Confirmed Section -->
             <div class="dash-panel">
-                <h3><i class="fas fa-check-circle" style="color: #4CAF50;"></i> Confirmed Consultations</h3>
+                <h3><i class="fas fa-check-circle" style="color: #4CAF50;"></i> पुष्टि गरिएका परामर्शहरू</h3>
                 <div id="confirmed-list">
-                    <p style="color: var(--text-dim);">Loading...</p>
+                    <p style="color: var(--text-dim);">लोड हुँदैछ...</p>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
                     renderBookings('confirmed', data.confirmed);
                 } catch (err) {
                     console.error(err);
-                    alert("Session expired or unauthorized.");
+                    alert("सत्र समाप्त भयो वा अनधिकृत।");
                     window.location.href = 'admin-login.html';
                 }
             }
@@ -88,7 +88,7 @@
                 container.innerHTML = '';
 
                 if (!bookings || bookings.length === 0) {
-                    container.innerHTML = `<p style="color: var(--text-dim);">No ${type} bookings.</p>`;
+                    container.innerHTML = `<p style="color: var(--text-dim);">कुनै ${type === 'pending' ? 'प्रतीक्षारत' : 'पुष्टि गरिएका'} बुकिङहरू छैनन्।</p>`;
                     return;
                 }
 
@@ -98,18 +98,18 @@
 
                     let html = `
                         <div class="booking-details">
-                            <span><strong>Name:</strong> ${b.Name || 'N/A'}</span>
-                            <span><strong>Service:</strong> ${b.Service || 'N/A'}</span>
-                            <span><strong>Date:</strong> ${b.Date || 'N/A'}</span>
-                            <span><strong>Txn Ref:</strong> ${b.TransactionID || 'N/A'}</span>
+                            <span><strong>नाम:</strong> ${b.Name || 'उपलब्ध छैन'}</span>
+                            <span><strong>सेवा:</strong> ${b.Service || 'उपलब्ध छैन'}</span>
+                            <span><strong>मिति:</strong> ${b.Date || 'उपलब्ध छैन'}</span>
+                            <span><strong>निक्षेप सन्दर्भ:</strong> ${b.TransactionID || 'उपलब्ध छैन'}</span>
                         </div>
                     `;
 
                     if (type === 'pending') {
                         html += `
                             <div class="btn-group">
-                                <button class="btn-small btn-confirm" onclick="updateBooking('${b.SessionID}', 'confirm')">Confirm</button>
-                                <button class="btn-small btn-reject" onclick="updateBooking('${b.SessionID}', 'reject')">Reject</button>
+                                <button class="btn-small btn-confirm" onclick="updateBooking('${b.SessionID}', 'confirm')">पुष्टि गर्नुहोस्</button>
+                                <button class="btn-small btn-reject" onclick="updateBooking('${b.SessionID}', 'reject')">अस्वीकार गर्नुहोस्</button>
                             </div>
                         `;
                     }
@@ -132,7 +132,7 @@
                     if (res.ok) {
                         fetchBookings(); // Refresh UI
                     } else {
-                        alert("Error updating booking.");
+                        alert("बुकिङ अपडेट गर्दा त्रुटि भयो।");
                     }
                 } catch (err) {
                     console.error(err);
