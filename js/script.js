@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Detect touch device
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     // Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
 
@@ -16,30 +19,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenu = document.querySelector('.mobile-menu');
     const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
+    function openMobileMenu() {
+        if (mobileMenu) {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeMobileMenu() {
+        if (mobileMenu) {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
     function toggleMobileMenu() {
-        mobileMenu.classList.toggle('active');
-        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        if (mobileMenu && mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
     }
 
     if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMobileMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
 
+    // Close menu on link click and scroll to section
     mobileNavItems.forEach(item => {
-        item.addEventListener('click', toggleMobileMenu);
+        item.addEventListener('click', (e) => {
+            closeMobileMenu();
+            // Allow default anchor link behavior after small delay
+            setTimeout(() => {
+                const href = item.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }, 100);
+        });
+    });
+
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMobileMenu();
     });
 
     // --- High Performance Render Loop (60 FPS) ---
+    // Skip cursor and parallax effects on touch devices
     const heroVisual = document.querySelector('.hero-visual');
     const orbs = document.querySelectorAll('.glow-orb');
     
-    // Create cursor elements
-    const cursorDot = document.createElement('div');
-    cursorDot.className = 'cursor-dot';
-    document.body.appendChild(cursorDot);
+    // Create cursor elements only for non-touch devices
+    let cursorDot, cursorOutline;
+    if (!isTouchDevice) {
+        cursorDot = document.createElement('div');
+        cursorDot.className = 'cursor-dot';
+        document.body.appendChild(cursorDot);
 
-    const cursorOutline = document.createElement('div');
-    cursorOutline.className = 'cursor-outline';
-    document.body.appendChild(cursorOutline);
+        cursorOutline = document.createElement('div');
+        cursorOutline.className = 'cursor-outline';
+        document.body.appendChild(cursorOutline);
+    }
 
     // State for smooth movement
     let mouseX = window.innerWidth / 2;
@@ -48,56 +90,64 @@ document.addEventListener('DOMContentLoaded', () => {
     let outlineX = mouseX, outlineY = mouseY;
     let parallaxX = 0, parallaxY = 0;
 
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    }, { passive: true });
+    // Only setup mouse tracking for non-touch devices
+    if (!isTouchDevice) {
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        }, { passive: true });
+    }
 
     const lerp = (start, end, factor) => start + (end - start) * factor;
 
     function render() {
-        // Smooth Cursor Dot (Fast follow)
-        dotX = lerp(dotX, mouseX, 0.3);
-        dotY = lerp(dotY, mouseY, 0.3);
-        cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+        // Only run cursor and parallax on non-touch devices
+        if (!isTouchDevice && cursorDot && cursorOutline) {
+            // Smooth Cursor Dot (Fast follow)
+            dotX = lerp(dotX, mouseX, 0.3);
+            dotY = lerp(dotY, mouseY, 0.3);
+            cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
 
-        // Smooth Cursor Outline (Delayed follow)
-        outlineX = lerp(outlineX, mouseX, 0.15);
-        outlineY = lerp(outlineY, mouseY, 0.15);
-        cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
+            // Smooth Cursor Outline (Delayed follow)
+            outlineX = lerp(outlineX, mouseX, 0.15);
+            outlineY = lerp(outlineY, mouseY, 0.15);
+            cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0) translate(-50%, -50%)`;
 
-        // Smooth Parallax
-        const targetParallaxX = (mouseX - window.innerWidth / 2) / 40;
-        const targetParallaxY = (mouseY - window.innerHeight / 2) / 40;
-        parallaxX = lerp(parallaxX, targetParallaxX, 0.1);
-        parallaxY = lerp(parallaxY, targetParallaxY, 0.1);
+            // Smooth Parallax
+            const targetParallaxX = (mouseX - window.innerWidth / 2) / 40;
+            const targetParallaxY = (mouseY - window.innerHeight / 2) / 40;
+            parallaxX = lerp(parallaxX, targetParallaxX, 0.1);
+            parallaxY = lerp(parallaxY, targetParallaxY, 0.1);
 
-        if (heroVisual) {
-            heroVisual.style.transform = `translate3d(${parallaxX}px, ${parallaxY}px, 0)`;
+            if (heroVisual) {
+                heroVisual.style.transform = `translate3d(${parallaxX}px, ${parallaxY}px, 0)`;
+            }
+
+            orbs.forEach((orb, index) => {
+                const factor = (index + 1) * 10;
+                orb.style.transform = `translate3d(${parallaxX / factor}px, ${parallaxY / factor}px, 0)`;
+            });
         }
-
-        orbs.forEach((orb, index) => {
-            const factor = (index + 1) * 10;
-            orb.style.transform = `translate3d(${parallaxX / factor}px, ${parallaxY / factor}px, 0)`;
-        });
 
         requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
 
-    // Cursor Hover States
-    document.querySelectorAll('a, button, input, textarea, select, .mobile-menu-btn, .close-menu-btn').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursorOutline.style.width = '60px';
-            cursorOutline.style.height = '60px';
-            cursorOutline.style.backgroundColor = 'rgba(255, 153, 51, 0.1)';
+    // Cursor Hover States - only for non-touch devices
+    if (!isTouchDevice && cursorOutline) {
+        document.querySelectorAll('a, button, input, textarea, select, .mobile-menu-btn, .close-menu-btn').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.width = '60px';
+                cursorOutline.style.height = '60px';
+                cursorOutline.style.backgroundColor = 'rgba(255, 153, 51, 0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.width = '40px';
+                cursorOutline.style.height = '40px';
+                cursorOutline.style.backgroundColor = 'transparent';
+            });
         });
-        el.addEventListener('mouseleave', () => {
-            cursorOutline.style.width = '40px';
-            cursorOutline.style.height = '40px';
-            cursorOutline.style.backgroundColor = 'transparent';
-        });
-    });
+    }
 
     // Intersection Observer for Scroll Animations
     const observerOptions = {
